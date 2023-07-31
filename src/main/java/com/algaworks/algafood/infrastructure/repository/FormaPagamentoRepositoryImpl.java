@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-public class FormaPagamentoRepositoryImp implements FormaPagamentoRepository {
+public class FormaPagamentoRepositoryImpl implements FormaPagamentoRepository {
 
   @PersistenceContext
   private EntityManager manager;
