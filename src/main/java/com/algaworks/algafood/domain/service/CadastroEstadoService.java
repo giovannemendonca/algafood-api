@@ -20,7 +20,6 @@ public class CadastroEstadoService {
     }
 
     public void excluir(Long estadoId){
-
       try {
           estadoRepository.remover(estadoId);
       }catch (EmptyResultDataAccessException e){

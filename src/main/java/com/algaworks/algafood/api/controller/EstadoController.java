@@ -70,6 +70,5 @@ public class EstadoController {
               .body(e.getMessage());
     }
   }
-
-
+  
 }
