@@ -25,36 +25,35 @@ public class CidadeController {
   private CadastroCidadeService cadastroCidade;
 
   @GetMapping
-  private List<Cidade> listar(){
-    return cidadeRepository.listar();
+  private List<Cidade> listar() {
+    return cidadeRepository.findAll();
   }
 
   @GetMapping("/{cidadeId}")
-  private ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId){
-    Cidade cidade = cidadeRepository.buscar(cidadeId);
-
-    if(cidade != null){
+  private ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId) {
+    Cidade cidade = cidadeRepository.findById(cidadeId).orElse(null);
+    if (cidade != null) {
       return ResponseEntity.ok(cidade);
     }
     return ResponseEntity.notFound().build();
   }
 
   @PostMapping
-  private ResponseEntity<?> adicionar(@RequestBody Cidade cidade){
+  private ResponseEntity<?> adicionar(@RequestBody Cidade cidade) {
     try {
       cidade = cadastroCidade.salvar(cidade);
       return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
 
-    }catch (EntidadeNaoEncontradaException e){
+    } catch (EntidadeNaoEncontradaException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
   @PutMapping("/{cidadeId}")
-  private ResponseEntity<Cidade> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade){
-    Cidade cidadeAtual = cidadeRepository.buscar(cidadeId);
+  private ResponseEntity<Cidade> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
+    Cidade cidadeAtual = cidadeRepository.findById(cidadeId).orElse(null);
 
-    if(cidadeAtual != null){
+    if (cidadeAtual != null) {
 
       BeanUtils.copyProperties(cidade, cidadeAtual, "id");
       cidadeAtual = cadastroCidade.salvar(cidadeAtual);
@@ -65,18 +64,18 @@ public class CidadeController {
   }
 
   @DeleteMapping("/{cidadeId}")
-  private ResponseEntity<?> excluir(@PathVariable Long cidadeId){
+  private ResponseEntity<?> excluir(@PathVariable Long cidadeId) {
     try {
       cadastroCidade.excluir(cidadeId);
       return ResponseEntity.noContent().build();
 
-    }catch (EntidadeNaoEncontradaException e){
+    } catch (EntidadeNaoEncontradaException e) {
       return ResponseEntity.notFound().build();
 
-    }catch (EntidadeEmUsoException e){
+    } catch (EntidadeEmUsoException e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
   }
-  
+
 
 }

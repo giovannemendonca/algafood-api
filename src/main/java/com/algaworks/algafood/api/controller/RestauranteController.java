@@ -22,49 +22,52 @@ import java.util.Map;
 public class RestauranteController {
 
   @Autowired
-  RestauranteRepository restauranteRepository;
+  private RestauranteRepository restauranteRepository;
   @Autowired
-  CadastroRestauranteService cadastroRestaurante;
+  private CadastroRestauranteService cadastroRestaurante;
+
 
   @GetMapping
   public List<Restaurante> listar() {
-    return  restauranteRepository.listar();
+    return restauranteRepository.findAll();
   }
 
   @GetMapping("/{restauranteId}")
-  public ResponseEntity<Restaurante> buscar( @PathVariable Long restauranteId){
-   Restaurante restaurante = restauranteRepository.buscar(restauranteId);
-   if(restaurante != null){
-     return ResponseEntity.ok(restaurante);
-   }
-   return ResponseEntity.notFound().build();
+  public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId) {
+
+    Restaurante restaurante = restauranteRepository.findById(restauranteId).orElse(null);
+    if (restaurante != null) {
+      return ResponseEntity.ok(restaurante);
+    }
+    return ResponseEntity.notFound().build();
   }
-  
+
   @PostMapping
-  public ResponseEntity<?> adicionar( @RequestBody  Restaurante restaurante){
-   try {
-     restaurante = cadastroRestaurante.salvar(restaurante);
-     return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
-   }catch (EntidadeNaoEncontradaException e){
-     return ResponseEntity
-             .badRequest()
-             .body(e.getMessage());
-   }
+  public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
+
+    try {
+      restaurante = cadastroRestaurante.salvar(restaurante);
+      return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
+    } catch (EntidadeNaoEncontradaException e) {
+      return ResponseEntity
+              .badRequest()
+              .body(e.getMessage());
+    }
   }
 
   @PutMapping("/{restauranteId}")
-  public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
+  public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
 
     try {
-      Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
-      if(restauranteAtual != null){
+      Restaurante restauranteAtual = restauranteRepository.findById(restauranteId).orElse(null);
+      if (restauranteAtual != null) {
         BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
         restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);
         return ResponseEntity.ok(restauranteAtual);
       }
       return ResponseEntity.notFound().build();
 
-    }catch (EntidadeNaoEncontradaException e){
+    } catch (EntidadeNaoEncontradaException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
 
@@ -72,10 +75,10 @@ public class RestauranteController {
   }
 
   @PatchMapping("/{restauranteId}")
-  public ResponseEntity<?> atualiazarParcial(@PathVariable Long restauranteId, @RequestBody Map<String,Object> campos){
+  public ResponseEntity<?> atualiazarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos) {
 
-    Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
-    if(restauranteAtual == null){
+    Restaurante restauranteAtual = restauranteRepository.findById(restauranteId).orElse(null);
+    if (restauranteAtual == null) {
       return ResponseEntity.notFound().build();
     }
     merge(campos, restauranteAtual);
@@ -83,8 +86,8 @@ public class RestauranteController {
     return atualizar(restauranteId, restauranteAtual);
   }
 
-  
-  private static void merge( Map <String, Object> dadosOrigem, Restaurante restauranteDestino) {
+
+  private static void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -94,7 +97,7 @@ public class RestauranteController {
 
     // Map.Entry é uma interface que representa um par de chave e valor em um Map (chave, valor)
     // O método entrySet() retorna um conjunto de pares (chave, valor) contidos no Map
-    for(Map.Entry <String, Object> entry : dadosOrigem.entrySet()) {
+    for (Map.Entry<String, Object> entry : dadosOrigem.entrySet()) {
 
       String nomePropriedade = entry.getKey();
       Object valorPropriedade = entry.getValue();
