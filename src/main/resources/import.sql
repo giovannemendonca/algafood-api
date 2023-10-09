@@ -9,9 +9,9 @@ INSERT INTO cozinha(id, nom_cozinha) VALUES (7, 'Francesa');
 INSERT INTO cozinha(id, nom_cozinha) VALUES (8, 'Árabe');
 
 -- Ajustando os IDs para a tabela restaurante
-INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Cantina da Nonna', 10, 1);
+INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Cantina da Nonna', 0, 1);
 INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Tian', 7, 1);
-INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Pizzaria Bella Napoli', 8, 3);
+INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Pizzaria Bella Napoli', 0, 3);
 INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Sushi House', 12, 4);
 INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Churrascaria Gaúcha', 15, 5);
 INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Curry Palace', 10, 6);
