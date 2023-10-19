@@ -1,59 +1,25 @@
--- Ajustando os IDs para a tabela cozinha
-INSERT INTO cozinha(id, nom_cozinha) VALUES (1, 'Italiana');
-INSERT INTO cozinha(id, nom_cozinha) VALUES (2, 'Chinesa');
-INSERT INTO cozinha(id, nom_cozinha) VALUES (3, 'Mexicana');
-INSERT INTO cozinha(id, nom_cozinha) VALUES (4, 'Japonesa');
-INSERT INTO cozinha(id, nom_cozinha) VALUES (5, 'Brasileira');
-INSERT INTO cozinha(id, nom_cozinha) VALUES (6, 'Indiana');
-INSERT INTO cozinha(id, nom_cozinha) VALUES (7, 'Francesa');
-INSERT INTO cozinha(id, nom_cozinha) VALUES (8, 'Árabe');
+insert into cozinha (id, nome) values (1, 'Tailandesa');
+insert into cozinha (id, nome) values (2, 'Indiana');
 
--- Ajustando os IDs para a tabela restaurante
-INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Cantina da Nonna', 0, 1);
-INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Tian', 7, 1);
-INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Pizzaria Bella Napoli', 0, 3);
-INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Sushi House', 12, 4);
-INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Churrascaria Gaúcha', 15, 5);
-INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Curry Palace', 10, 6);
-INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Le Bistro', 20, 7);
-INSERT INTO restaurante(nome, taxa_frete, cozinha_id) VALUES ('Almanara', 18, 8);
+insert into estado (id, nome) values (1, 'Minas Gerais');
+insert into estado (id, nome) values (2, 'São Paulo');
+insert into estado (id, nome) values (3, 'Ceará');
 
--- Ajustando os IDs para a tabela estado
-INSERT INTO estado (id, nome) VALUES (1, 'Minas Gerais');
-INSERT INTO estado (id, nome) VALUES (2, 'São Paulo');
-INSERT INTO estado (id, nome) VALUES (3, 'Ceará');
-INSERT INTO estado (id, nome) VALUES (4, 'Rio de Janeiro');
-INSERT INTO estado (id, nome) VALUES (5, 'Bahia');
-INSERT INTO estado (id, nome) VALUES (6, 'Paraná');
-INSERT INTO estado (id, nome) VALUES (7, 'Amazonas');
-INSERT INTO estado (id, nome) VALUES (8, 'Santa Catarina');
+insert into cidade (id, nome, estado_id) values (1, 'Uberlândia', 1);
+insert into cidade (id, nome, estado_id) values (2, 'Belo Horizonte', 1);
+insert into cidade (id, nome, estado_id) values (3, 'São Paulo', 2);
+insert into cidade (id, nome, estado_id) values (4, 'Campinas', 2);
+insert into cidade (id, nome, estado_id) values (5, 'Fortaleza', 3);
 
--- Ajustando os IDs para a tabela cidade
-INSERT INTO cidade (id, nome, estado_id) VALUES (1, 'Uberlândia', 1);
-INSERT INTO cidade (id, nome, estado_id) VALUES (2, 'Belo Horizonte', 1);
-INSERT INTO cidade (id, nome, estado_id) VALUES (3, 'São Paulo', 2);
-INSERT INTO cidade (id, nome, estado_id) VALUES (4, 'Campinas', 2);
-INSERT INTO cidade (id, nome, estado_id) VALUES (5, 'Fortaleza', 3);
-INSERT INTO cidade (id, nome, estado_id) VALUES (6, 'Curitiba', 6);
-INSERT INTO cidade (id, nome, estado_id) VALUES (7, 'Manaus', 7);
-INSERT INTO cidade (id, nome, estado_id) VALUES (8, 'Florianópolis', 8);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_bairro) values (1, 'Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values (2, 'Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values (3, 'Tuk Tuk Comida Indiana', 15, 2, utc_timestamp, utc_timestamp);
 
--- Ajustando os IDs para a tabela forma_pagamento
-INSERT INTO forma_pagamento (id, descricao) VALUES (1, 'Cartão de crédito');
-INSERT INTO forma_pagamento (id, descricao) VALUES (2, 'Cartão de débito');
-INSERT INTO forma_pagamento (id, descricao) VALUES (3, 'Dinheiro');
-INSERT INTO forma_pagamento (id, descricao) VALUES (4, 'Pix');
-INSERT INTO forma_pagamento (id, descricao) VALUES (5, 'Cheque');
-INSERT INTO forma_pagamento (id, descricao) VALUES (6, 'Vale-refeição');
-INSERT INTO forma_pagamento (id, descricao) VALUES (7, 'Transferência bancária');
-INSERT INTO forma_pagamento (id, descricao) VALUES (8, 'Bitcoin');
+insert into forma_pagamento (id, descricao) values (1, 'Cartão de crédito');
+insert into forma_pagamento (id, descricao) values (2, 'Cartão de débito');
+insert into forma_pagamento (id, descricao) values (3, 'Dinheiro');
 
--- Ajustando os IDs para a tabela permissao
-INSERT INTO permissao (id, nome, descricao) VALUES (1, 'CONSULTAR_COZINHAS', 'Permite consultar cozinhas');
-INSERT INTO permissao (id, nome, descricao) VALUES (2, 'EDITAR_COZINHAS', 'Permite editar cozinhas');
-INSERT INTO permissao (id, nome, descricao) VALUES (3, 'EXCLUIR_COZINHAS', 'Permite excluir cozinhas');
-INSERT INTO permissao (id, nome, descricao) VALUES (4, 'CONSULTAR_RESTAURANTES', 'Permite consultar restaurantes');
-INSERT INTO permissao (id, nome, descricao) VALUES (5, 'EDITAR_RESTAURANTES', 'Permite editar restaurantes');
-INSERT INTO permissao (id, nome, descricao) VALUES (6, 'CONSULTAR_ESTADOS', 'Permite consultar estados');
-INSERT INTO permissao (id, nome, descricao) VALUES (7, 'EDITAR_ESTADOS', 'Permite editar estados');
-INSERT INTO permissao (id, nome, descricao) VALUES (8, 'CONSULTAR_CIDADES', 'Permite consultar cidades');
+insert into permissao (id, nome, descricao) values (1, 'CONSULTAR_COZINHAS', 'Permite consultar cozinhas');
+insert into permissao (id, nome, descricao) values (2, 'EDITAR_COZINHAS', 'Permite editar cozinhas');
+
+insert into restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) values (1, 1), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3);

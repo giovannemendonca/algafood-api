@@ -61,7 +61,7 @@ public class RestauranteController {
     try {
       Restaurante restauranteAtual = restauranteRepository.findById(restauranteId).orElse(null);
       if (restauranteAtual != null) {
-        BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+        BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro");
         restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);
         return ResponseEntity.ok(restauranteAtual);
       }
@@ -85,6 +85,7 @@ public class RestauranteController {
 
     return atualizar(restauranteId, restauranteAtual);
   }
+
 
 
   private static void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
