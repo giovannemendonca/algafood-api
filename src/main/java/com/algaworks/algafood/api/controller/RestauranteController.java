@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.Groups;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -8,6 +9,7 @@ import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
@@ -37,14 +40,16 @@ public class RestauranteController {
     return restauranteRepository.findAll();
   }
 
+
   @GetMapping("/{restauranteId}")
   public Restaurante buscar(@PathVariable Long restauranteId) {
 
     return cadastroRestaurante.buscarOuFalhar(restauranteId);
   }
 
+
   @PostMapping
-  public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+  public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante) {
     try {
       return cadastroRestaurante.salvar(restaurante);
     }catch (CozinhaNaoEncontradoException e){
@@ -52,8 +57,9 @@ public class RestauranteController {
     }
   }
 
+
   @PutMapping("/{restauranteId}")
-  public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+  public Restaurante atualizar(@PathVariable Long restauranteId, @Valid @RequestBody Restaurante restaurante) {
 
     Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
     BeanUtils.copyProperties(restaurante,
@@ -68,7 +74,6 @@ public class RestauranteController {
   }
 
 
-
   @PatchMapping("/{restauranteId}")
   public Restaurante atualiazarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest request) {
 
@@ -77,7 +82,6 @@ public class RestauranteController {
 
     return atualizar(restauranteId, restauranteAtual);
   }
-
 
 
   private static void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {

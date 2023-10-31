@@ -8,12 +8,16 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.cglib.core.Local;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -30,6 +34,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
   public static final String MSG_ERRO_GENERICA_USUARIO_FINAL = "Ocorrência de erro interno no sistema. Tente novamente e se o problema persistir, entre em contato "
           + "com o administrador do sistema.";
+
+  @Autowired
+  MessageSource messageSource;
 
   @ExceptionHandler(EntidadeNaoEncontradaException.class)
   public ResponseEntity<?> handleEntidadeNaoEncontradaException(
@@ -128,7 +135,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @Override
-  protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+  protected ResponseEntity<Object> handleTypeMismatch(
+          TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
     if (ex instanceof MethodArgumentTypeMismatchException) {
       return handleMethodArgumentTypeMismatch((MethodArgumentTypeMismatchException) ex, headers, status, request);
     }
@@ -136,12 +144,43 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @Override
-  protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+  protected ResponseEntity<Object> handleNoHandlerFoundException(
+          NoHandlerFoundException ex, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
 
     HttpStatus status = (HttpStatus) statusCode;
     ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
     String detail = String.format("O recurso %s, que você tentou acessar, é inexistente.", ex.getRequestURL());
     Problem problem = createProblemBuilder(status, problemType, detail).build();
+
+    return handleExceptionInternal(ex, problem, headers, status, request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleMethodArgumentNotValid
+          (MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+
+    BindingResult bindingResult = ex.getBindingResult();
+
+    List<Problem.Field> problemFields = bindingResult.getFieldErrors()
+            .stream()
+            .map(fieldError -> {
+
+              String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+              return Problem.Field.builder()
+                      .name(fieldError.getField())
+                      .userMessage(message)
+                      .build();
+            })
+            .collect(Collectors.toList());
+
+    HttpStatus status = (HttpStatus) statusCode;
+    ProblemType problemType = ProblemType.MESSAGEM_INCOMPREENSIVEL;
+    String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
+    Problem problem = createProblemBuilder(status, problemType, detail)
+            .fields(problemFields)
+            .userMessage(detail)
+            .build();
 
     return handleExceptionInternal(ex, problem, headers, status, request);
   }
