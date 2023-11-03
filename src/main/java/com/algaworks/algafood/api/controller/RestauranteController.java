@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
@@ -52,6 +53,7 @@ public class RestauranteController {
 
 
   @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
   public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante) {
     try {
       return cadastroRestaurante.salvar(restaurante);
