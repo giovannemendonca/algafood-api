@@ -32,6 +32,7 @@ public class CadastroCozinhaService {
     }
     try {
       cozinhaRepository.deleteById(cozinhaId);
+      cozinhaRepository.flush();
 
     } catch (DataIntegrityViolationException e) {
       throw new EntidadeEmUsoException(
