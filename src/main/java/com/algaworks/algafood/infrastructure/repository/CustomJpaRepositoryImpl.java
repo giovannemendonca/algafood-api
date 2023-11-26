@@ -16,6 +16,7 @@ public class CustomJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> i
     this.manager = entityManager;
   }
 
+
   @Override
   public Optional<T> buscarPrimeiro() {
     var jpkl = "from " + getDomainClass().getName();
