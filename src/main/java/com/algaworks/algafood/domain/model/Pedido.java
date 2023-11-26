@@ -38,19 +38,19 @@ public class Pedido {
 
   private StatusPedido statusPedido;
 
-  @ManyToOne
+  @ManyToOne // o ManyToOne diz que um pedido tem uma forma de pagamento ou seja uma forma de pagamento tem muitos pedidos
   @JoinColumn(nullable = false)
   private FormaPagamento formaPagamento;
 
-  @ManyToOne
+  @ManyToOne // o ManyToOne diz que um pedido tem um restaurante ou seja um restaurante tem muitos pedidos
   @JoinColumn(nullable = false)
   private Restaurante restaurante;
 
-  @ManyToOne
+  @ManyToOne // o ManyToOne diz que um pedido tem um cliente ou seja um cliente tem muitos pedidos
   @JoinColumn(name = "usuario_cliente_id", nullable = false)
   private Usuario usuario;
 
-  @OneToMany(mappedBy = "pedido")
+  @OneToMany(mappedBy = "pedido") // o OneToMany diz que um pedido tem muitos itens ou seja um item tem um pedido
   private List<ItemPedido> itens = new ArrayList<>();
 
 }
