@@ -47,7 +47,6 @@ public class RestauranteController {
     return restaurantesDTO;
   }
 
-
   @GetMapping("/{restauranteId}")
   public RestauranteDTO buscar(@PathVariable Long restauranteId) {
     Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
@@ -55,8 +54,6 @@ public class RestauranteController {
 
     return restauranteDTO;
   }
-
-
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
@@ -89,6 +86,18 @@ public class RestauranteController {
       throw new NegocioException(e.getMessage());
     }
 
+  }
+
+  @PutMapping("/{restauranteId}/ativo")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void ativar(@PathVariable Long restauranteId) {
+    cadastroRestaurante.ativar(restauranteId);
+  }
+
+  @DeleteMapping("/{restauranteId}/ativo")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void inativar(@PathVariable Long restauranteId) {
+    cadastroRestaurante.inativar(restauranteId);
   }
 
 }

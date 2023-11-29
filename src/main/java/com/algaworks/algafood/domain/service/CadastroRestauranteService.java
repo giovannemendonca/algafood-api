@@ -32,6 +32,24 @@ public class CadastroRestauranteService {
   }
 
   @Transactional
+  public void ativar(Long restauranteId){
+    Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
+
+    restauranteAtual.ativar();
+
+    // não precisa do save, pois o objeto já está sendo gerenciado pelo JPA
+  }
+
+  @Transactional
+  public void inativar(Long restauranteId){
+    Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
+
+    restauranteAtual.inativar();
+
+    // não precisa do save, pois o objeto já está sendo gerenciado pelo JPA
+  }
+
+  @Transactional
   public Restaurante buscarOuFalhar(Long restauranteId) {
     return restauranteRepository.findById(restauranteId)
             .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
