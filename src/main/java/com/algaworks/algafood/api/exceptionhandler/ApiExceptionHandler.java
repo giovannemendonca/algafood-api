@@ -1,9 +1,6 @@
 package com.algaworks.algafood.api.exceptionhandler;
 
-import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
-import com.algaworks.algafood.domain.exception.NegocioException;
-import com.algaworks.algafood.domain.exception.ValidacaoException;
+import com.algaworks.algafood.domain.exception.*;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
@@ -27,7 +24,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,6 +64,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
   }
+
+  @ExceptionHandler(FormaPagamentoNaoEncontradaException.class)
+  public ResponseEntity<?> handleFormaPagamentoNaoEncontradaException(
+          FormaPagamentoNaoEncontradaException ex, WebRequest request) {
+
+    HttpStatus status = HttpStatus.NOT_FOUND;
+    ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
+    String detail = ex.getMessage();
+
+    Problem problem = createProblemBuilder(status, problemType, detail)
+            .userMessage(detail)
+            .build();
+
+    return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+
+  }
+
 
   @ExceptionHandler(NegocioException.class)
   public ResponseEntity<?> handleNegocioException(NegocioException ex, WebRequest request) {
