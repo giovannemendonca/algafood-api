@@ -42,7 +42,7 @@ public class RestauranteController {
   @GetMapping
   public List<RestauranteDTO> listar() {
     List<Restaurante> restaurantes = restauranteRepository.findAll();
-    List<RestauranteDTO> restaurantesDTO = RestauranteDTOAssembler.toCollectionDTO(restaurantes);
+    List<RestauranteDTO> restaurantesDTO = restauranteDTOAssembler.toCollectionModel(restaurantes);
 
     return restaurantesDTO;
   }
@@ -50,7 +50,7 @@ public class RestauranteController {
   @GetMapping("/{restauranteId}")
   public RestauranteDTO buscar(@PathVariable Long restauranteId) {
     Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
-    RestauranteDTO restauranteDTO = RestauranteDTOAssembler.toDTO(restaurante);
+    RestauranteDTO restauranteDTO = restauranteDTOAssembler.toDTO(restaurante);
 
     return restauranteDTO;
   }
@@ -60,9 +60,9 @@ public class RestauranteController {
   public RestauranteDTO adicionar(@RequestBody @Valid RestauranteInputDTO restauranteInputDTO) {
     try {
 
-      Restaurante restaurante = restauranteInputDTODisassembler.ToDomainObject(restauranteInputDTO);
+      Restaurante restaurante = restauranteInputDTODisassembler.toDomainObject(restauranteInputDTO);
       Restaurante RestauranteCadastrado = cadastroRestaurante.salvar(restaurante);
-      RestauranteDTO restauranteDTO = RestauranteDTOAssembler.toDTO(RestauranteCadastrado);
+      RestauranteDTO restauranteDTO = restauranteDTOAssembler.toDTO(RestauranteCadastrado);
       return restauranteDTO;
     }catch (CozinhaNaoEncontradoException e){
       throw new NegocioException(e.getMessage());
@@ -77,10 +77,10 @@ public class RestauranteController {
       Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
       // não precisa retornar o objeto, pois o objeto já está sendo passado por referência
-      restauranteInputDTODisassembler.CopyToDomainObject(restauranteInputDTO, restauranteAtual);
+      restauranteInputDTODisassembler.copyToDomainObject(restauranteInputDTO, restauranteAtual);
 
       Restaurante restauranteCadastrado = cadastroRestaurante.salvar(restauranteAtual);
-      RestauranteDTO restauranteDTO = RestauranteDTOAssembler.toDTO(restauranteCadastrado);
+      RestauranteDTO restauranteDTO = restauranteDTOAssembler.toDTO(restauranteCadastrado);
       return restauranteDTO;
     }catch (CozinhaNaoEncontradoException e){
       throw new NegocioException(e.getMessage());

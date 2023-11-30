@@ -9,13 +9,11 @@ import java.math.BigDecimal;
 @Setter
 public class RestauranteDTO {
 
+
   private Long id;
-
   private String nome;
-
   private BigDecimal taxaFrete;
-
   private CozinhaDTO cozinha;
-
   private Boolean ativo;
+  private EnderecoDTO endereco;
 }

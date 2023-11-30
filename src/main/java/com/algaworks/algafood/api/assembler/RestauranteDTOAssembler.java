@@ -13,16 +13,16 @@ import java.util.stream.Collectors;
 @Component
 public class RestauranteDTOAssembler {
 
-
   @Autowired
-  ModelMapper modelMapper;
+  private ModelMapper modelMapper;
 
-
-  public static RestauranteDTO toDTO(Restaurante restaurante) {
-   return new ModelMapper().map(restaurante, RestauranteDTO.class);
+  public RestauranteDTO toDTO(Restaurante restaurante) {
+    return modelMapper.map(restaurante, RestauranteDTO.class);
   }
 
-  public static List<RestauranteDTO> toCollectionDTO(List<Restaurante> restaurantes) {
-    return restaurantes.stream().map(restaurante -> toDTO(restaurante)).collect(Collectors.toList());
+  public List<RestauranteDTO> toCollectionModel(List<Restaurante> restaurantes) {
+    return restaurantes.stream()
+            .map(restaurante -> toDTO(restaurante))
+            .collect(Collectors.toList());
   }
 }

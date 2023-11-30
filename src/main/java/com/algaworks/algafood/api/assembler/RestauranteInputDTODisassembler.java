@@ -9,22 +9,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RestauranteInputDTODisassembler {
-
   @Autowired
-  ModelMapper modelMapper;
+  private ModelMapper modelMapper;
 
-  public Restaurante ToDomainObject(RestauranteInputDTO restauranteInputDTO){
-
-    return new ModelMapper().map(restauranteInputDTO, Restaurante.class);
+  public Restaurante toDomainObject(RestauranteInputDTO restauranteInput) {
+    return modelMapper.map(restauranteInput, Restaurante.class);
   }
 
-  // esse metodo não retorna nada, ele apenas copia os dados de um objeto para outro
-  public void CopyToDomainObject(RestauranteInputDTO restauranteInputDTO, Restaurante restaurante){
-
+  public void copyToDomainObject(RestauranteInputDTO restauranteInput, Restaurante restaurante) {
     // Para evitar org.hibernate.HibernateException: identifier of an instance of
     // com.algaworks.algafood.domain.model.Cozinha was altered from 1 to 2
     restaurante.setCozinha(new Cozinha());
 
-    modelMapper.map(restauranteInputDTO, restaurante);
+    modelMapper.map(restauranteInput, restaurante);
   }
 }
