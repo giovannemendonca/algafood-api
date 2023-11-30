@@ -16,6 +16,7 @@ public class CadastroRestauranteService {
 
   @Autowired
   private RestauranteRepository restauranteRepository;
+
   @Autowired
   private CozinhaRepository cozinhaRepository;
 

@@ -4,7 +4,6 @@ import com.algaworks.algafood.api.assembler.RestauranteDTOAssembler;
 import com.algaworks.algafood.api.assembler.RestauranteInputDTODisassembler;
 import com.algaworks.algafood.api.model.dto.RestauranteDTO;
 import com.algaworks.algafood.api.model.dto.input.RestauranteInputDTO;
-import com.algaworks.algafood.domain.exception.CidadeNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -84,8 +83,6 @@ public class RestauranteController {
       RestauranteDTO restauranteDTO = restauranteDTOAssembler.toDTO(restauranteCadastrado);
       return restauranteDTO;
     }catch (CozinhaNaoEncontradoException e){
-      throw new NegocioException(e.getMessage());
-    }catch (CidadeNaoEncontradoException e){
       throw new NegocioException(e.getMessage());
     }
 
