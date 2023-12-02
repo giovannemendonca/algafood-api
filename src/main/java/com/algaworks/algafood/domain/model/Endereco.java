@@ -24,6 +24,8 @@ public class Endereco {
   @Column(name = "endereco_bairro")
   private String bairro;
 
+  // esse fetch diz que o endereço é um relacionamento muitos para um com a cidade
+  // e o Lazy diz que o endereço só será carregado quando for acessado
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "endereco_cidade_id")
   private Cidade cidade;
