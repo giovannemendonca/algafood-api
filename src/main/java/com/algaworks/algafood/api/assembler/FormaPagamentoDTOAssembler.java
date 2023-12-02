@@ -23,7 +23,6 @@ public class FormaPagamentoDTOAssembler {
   }
 
 
-
   public List<FormaPagamentoDTO> toCollectionDTO(Collection<FormaPagamento> formaPagamentos){
     return formaPagamentos.stream()
             .map(formaPagamento -> toDTO(formaPagamento))

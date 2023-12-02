@@ -15,7 +15,7 @@ public class UsuarioDTOAssembler {
   @Autowired
   private ModelMapper modelMapper;
 
-  public UsuarioDTO toDTO(Usuario usuario) {
+public UsuarioDTO toDTO(Usuario usuario) {
     return modelMapper.map(usuario, UsuarioDTO.class);
   }
 
