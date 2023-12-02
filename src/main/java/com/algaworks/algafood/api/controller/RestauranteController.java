@@ -51,7 +51,6 @@ public class RestauranteController {
   public RestauranteDTO buscar(@PathVariable Long restauranteId) {
     Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
     RestauranteDTO restauranteDTO = restauranteDTOAssembler.toDTO(restaurante);
-
     return restauranteDTO;
   }
 

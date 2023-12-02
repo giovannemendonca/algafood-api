@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,4 +17,5 @@ public class RestauranteDTO {
   private CozinhaDTO cozinha;
   private Boolean ativo;
   private EnderecoDTO endereco;
+
 }

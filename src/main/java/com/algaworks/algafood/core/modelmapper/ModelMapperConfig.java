@@ -1,13 +1,21 @@
 package com.algaworks.algafood.core.modelmapper;
 
+import com.algaworks.algafood.api.assembler.RestauranteDTOAssembler;
 import com.algaworks.algafood.api.model.dto.EnderecoDTO;
+import com.algaworks.algafood.api.model.dto.FormaPagamentoDTO;
+import com.algaworks.algafood.api.model.dto.RestauranteDTO;
 import com.algaworks.algafood.domain.model.Endereco;
+import com.algaworks.algafood.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 public class ModelMapperConfig {
+  
 
   @Bean
   public ModelMapper modelMapper() {
