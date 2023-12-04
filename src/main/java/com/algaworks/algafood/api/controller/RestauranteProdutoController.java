@@ -61,11 +61,12 @@ public class RestauranteProdutoController {
     Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 
     Produto produto = produtoInputDTODisassembler.toDomainObject(produtoInputDTO);
+
     produto.setRestaurante(restaurante);
 
-    produto = cadastroProdutoService.salvar(produto);
+    var produtoSalvo = cadastroProdutoService.salvar(produto);
 
-    return produtoDTOAssembler.toDTO(produto);
+    return produtoDTOAssembler.toDTO(produtoSalvo);
   }
 
 

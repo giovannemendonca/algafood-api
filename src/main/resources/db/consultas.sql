@@ -15,5 +15,4 @@ select * from algafood.grupo;
 
 select * from usuario;
 
-select * from algafood.produto;
-
+select * from algafood.produto p;
