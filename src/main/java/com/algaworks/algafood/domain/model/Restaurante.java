@@ -39,10 +39,6 @@ public class Restaurante {
   @Column(name = "taxa_frete", nullable = false)
   private BigDecimal taxaFrete;
 
-  @ManyToOne
-  @JoinColumn(name = "cozinha_id", nullable = false)
-  private Cozinha cozinha;
-
   @Embedded
   private Endereco endereco;
 
@@ -50,13 +46,9 @@ public class Restaurante {
 
   private Boolean aberto = Boolean.FALSE;
 
-  @CreationTimestamp
-  @Column(nullable = false, columnDefinition = "datetime")
-  private OffsetDateTime dataCadastro;
-
-  @UpdateTimestamp
-  @Column(nullable = false, columnDefinition = "datetime")
-  private OffsetDateTime dataAtualizacao;
+  @ManyToOne
+  @JoinColumn(name = "cozinha_id", nullable = false)
+  private Cozinha cozinha;
 
   @ManyToMany
   @JoinTable(name = "restaurante_forma_pagamento",
@@ -66,6 +58,20 @@ public class Restaurante {
 
   @OneToMany(mappedBy = "restaurante")
   List<Produto> produtos = new ArrayList<>();
+
+  @ManyToMany
+  @JoinTable(name = "restaurante_usuario_responsavel",
+    joinColumns = @JoinColumn(name = "restaurante_id"),
+    inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+  Set<Usuario> responsaveis = new HashSet<>();
+
+  @CreationTimestamp
+  @Column(nullable = false, columnDefinition = "datetime")
+  private OffsetDateTime dataCadastro;
+
+  @UpdateTimestamp
+  @Column(nullable = false, columnDefinition = "datetime")
+  private OffsetDateTime dataAtualizacao;
 
 
   public void ativar(){
@@ -79,6 +85,7 @@ public class Restaurante {
   public void abrir(){
     setAberto(true);
   }
+
   public void fechar(){
     setAberto(false);
   }
@@ -89,6 +96,14 @@ public class Restaurante {
 
   public boolean adicionarFormaPagamento(FormaPagamento formaPagamento){
     return getFormasPagamento().add(formaPagamento);
+  }
+
+  public boolean removerResponsavel(Usuario usuario){
+    return getResponsaveis().remove(usuario);
+  }
+
+  public boolean adicionarResponsavel(Usuario usuario){
+    return getResponsaveis().add(usuario);
   }
 
 
