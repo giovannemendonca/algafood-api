@@ -1,7 +1,9 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.PedidoDTOAssembler;
+import com.algaworks.algafood.api.assembler.PedidoResumoDTOAssembler;
 import com.algaworks.algafood.api.model.dto.PedidoDTO;
+import com.algaworks.algafood.api.model.dto.PedidoResumoDTO;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,19 +20,23 @@ public class PedidoController {
   private EmissaoPedidoService emissaoPedidoService;
   private PedidoRepository pedidoRepository;
   private PedidoDTOAssembler pedidoDTOAssembler;
+  private PedidoResumoDTOAssembler pedidoResumoDTOAssembler;
 
   PedidoController(EmissaoPedidoService emissaoPedidoService,
                    PedidoRepository pedidoRepository,
-                   PedidoDTOAssembler pedidoDTOAssembler) {
+                   PedidoDTOAssembler pedidoDTOAssembler,
+                   PedidoResumoDTOAssembler pedidoResumoDTOAssembler
+  ) {
     this.emissaoPedidoService = emissaoPedidoService;
     this.pedidoRepository = pedidoRepository;
     this.pedidoDTOAssembler = pedidoDTOAssembler;
+    this.pedidoResumoDTOAssembler = pedidoResumoDTOAssembler;
   }
 
 
   @GetMapping
-  public List<PedidoDTO> listar() {
-    return pedidoDTOAssembler.toCollectionDTO(pedidoRepository.findAll());
+  public List<PedidoResumoDTO> listar() {
+    return pedidoResumoDTOAssembler.toCollectionDTO(pedidoRepository.findAll());
   }
 
   @GetMapping("/{pedidoId}")
