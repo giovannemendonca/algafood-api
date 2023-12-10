@@ -50,3 +50,6 @@ WHERE r.id=1;
 select * from produto;
 
 
+select * from pedido;
+
+

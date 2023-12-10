@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,21 +35,39 @@ public class Pedido {
   @Embedded
   private Endereco enderecoEntrega;
 
-  private StatusPedido statusPedido;
+  @Enumerated(EnumType.STRING)
+  private StatusPedido status = StatusPedido.CRIADO;
 
-  @ManyToOne // o ManyToOne diz que um pedido tem uma forma de pagamento ou seja uma forma de pagamento tem muitos pedidos
+  @ManyToOne
   @JoinColumn(nullable = false)
   private FormaPagamento formaPagamento;
 
-  @ManyToOne // o ManyToOne diz que um pedido tem um restaurante ou seja um restaurante tem muitos pedidos
+  @ManyToOne
   @JoinColumn(nullable = false)
   private Restaurante restaurante;
 
-  @ManyToOne // o ManyToOne diz que um pedido tem um cliente ou seja um cliente tem muitos pedidos
+  @ManyToOne
   @JoinColumn(name = "usuario_cliente_id", nullable = false)
-  private Usuario usuario;
+  private Usuario cliente;
 
-  @OneToMany(mappedBy = "pedido") // o OneToMany diz que um pedido tem muitos itens ou seja um item tem um pedido
+  @OneToMany(mappedBy = "pedido")
   private List<ItemPedido> itens = new ArrayList<>();
+
+  public void calcularValorTotal() {
+    this.subtotal = getItens()
+            .stream()
+            .map(item -> item.getPrecoTotal())
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    this.valorTotal = this.subtotal.add(this.taxaFrete);
+  }
+
+  public void definirFrete() {
+    setTaxaFrete(getRestaurante().getTaxaFrete());
+  }
+
+  public void atribuirPedidoAosItens() {
+    getItens().forEach(item -> item.setPedido(this));
+  }
 
 }
