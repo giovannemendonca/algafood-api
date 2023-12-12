@@ -53,3 +53,6 @@ select * from produto;
 select * from pedido;
 
 
+select * from restaurante;
+
+

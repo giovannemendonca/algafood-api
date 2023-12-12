@@ -59,3 +59,4 @@ insert into usuario (id, nome, email, senha, data_cadastro) values
 (2, 'Maria Joaquina', 'maria.vnd@algafood.com', '123456', utc_timestamp),
 (3, 'José Souza', 'jose.aux@algafood.com', '123456', utc_timestamp),
 (4, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '123456', utc_timestamp);
+
