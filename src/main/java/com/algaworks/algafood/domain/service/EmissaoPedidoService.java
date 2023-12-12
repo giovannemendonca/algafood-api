@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class EmissaoPedidoService {
 
@@ -45,9 +47,9 @@ public class EmissaoPedidoService {
     return pedidoRepository.save(pedido);
   }
 
-  public Pedido buscarOuFalhar(Long pedidoId) {
-    return pedidoRepository.findById(pedidoId).orElseThrow(
-            () -> new PedidoNaoEncontradoException(pedidoId)
+  public Pedido buscarOuFalhar(String codigo) {
+    return pedidoRepository.findByCodigo(codigo).orElseThrow(
+            () -> new PedidoNaoEncontradoException(codigo)
     );
   }
 

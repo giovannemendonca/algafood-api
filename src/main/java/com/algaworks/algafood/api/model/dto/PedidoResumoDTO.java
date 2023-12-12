@@ -6,12 +6,13 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class PedidoResumoDTO {
 
-  private Long id;
+  private String codigo;
   private BigDecimal subtotal;
   private BigDecimal taxaFrete;
   private BigDecimal valorTotal;
