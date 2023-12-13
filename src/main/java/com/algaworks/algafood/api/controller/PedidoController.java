@@ -12,11 +12,15 @@ import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import jakarta.validation.Valid;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -42,10 +46,25 @@ public class PedidoController {
         this.pedidoInputDTODisassembler = pedidoInputDTODisassembler;
     }
 
-
     @GetMapping
-    public List<PedidoResumoDTO> listar() {
-        return pedidoResumoDTOAssembler.toCollectionDTO(pedidoRepository.findAll());
+    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
+        List<Pedido> pedidos = pedidoRepository.findAll();
+        List<PedidoResumoDTO> pedidosDto = pedidoResumoDTOAssembler.toCollectionDTO(pedidos);
+
+        MappingJacksonValue pedidosWrapper = new MappingJacksonValue(pedidosDto);
+
+        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+        filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
+
+        // se o parametro campos não for nulo, então filtra os campos que vierem na requisição
+        if (StringUtils.isNotBlank(campos)) {
+            filterProvider.addFilter("pedidoFilter",
+                    SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
+        }
+
+        pedidosWrapper.setFilters(filterProvider);
+
+        return pedidosWrapper;
     }
 
     @GetMapping("/{codigoPedido}")
@@ -53,7 +72,9 @@ public class PedidoController {
         return pedidoDTOAssembler.toDTO(emissaoPedidoService.buscarOuFalhar(codigoPedido));
     }
 
+
     @PostMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public PedidoDTO adicionar(@Valid @RequestBody PedidoInputDTO pedidoInputDTO) {
         try {
             Pedido pedido = pedidoInputDTODisassembler.toDomainObject(pedidoInputDTO);

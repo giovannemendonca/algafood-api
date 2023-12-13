@@ -4,12 +4,14 @@ import com.algaworks.algafood.api.assembler.RestauranteDTOAssembler;
 import com.algaworks.algafood.api.assembler.RestauranteInputDTODisassembler;
 import com.algaworks.algafood.api.model.dto.RestauranteDTO;
 import com.algaworks.algafood.api.model.dto.input.RestauranteInputDTO;
+import com.algaworks.algafood.api.model.view.RestauranteView;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -37,11 +39,18 @@ public class RestauranteController {
     this.restauranteInputDTODisassembler = restauranteInputDTODisassembler;
   }
 
+  @JsonView(RestauranteView.Resumo.class)
   @GetMapping
   public List<RestauranteDTO> listar() {
-    List<Restaurante> restaurantes = restauranteRepository.findAll();
-    return restauranteDTOAssembler.toCollectionModel(restaurantes);
+    return restauranteDTOAssembler.toCollectionModel(restauranteRepository.findAll());
   }
+
+  @JsonView(RestauranteView.ApenasNome.class)
+  @GetMapping(params = "projecao=apenas-nome")
+  public List<RestauranteDTO> listarApenasNomes() {
+    return listar();
+  }
+
 
   @GetMapping("/{restauranteId}")
   public RestauranteDTO buscar(@PathVariable Long restauranteId) {
