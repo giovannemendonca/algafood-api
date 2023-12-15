@@ -18,7 +18,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     List<Produto> findTodosByRestaurante(Restaurante restaurante);
 
-    @Query(nativeQuery = true,
-            value = "SELECT * FROM produto p WHERE p.restaurante_id=1 AND p.ativo = TRUE")
+    @Query("from Produto p where p.ativo = true and p.restaurante = :restaurante")
     List<Produto> findAtivosByRestaurante(Restaurante restaurante);
 }

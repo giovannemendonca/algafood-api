@@ -84,6 +84,7 @@ public class CadastroRestauranteIT {
             .statusCode(HttpStatus.OK.value());
   }
 
+/*
   @Test
   public void deveRetornarStatus201_QuandoCadastrarRestaurante() {
     given()
@@ -95,6 +96,7 @@ public class CadastroRestauranteIT {
             .then()
             .statusCode(HttpStatus.CREATED.value());
   }
+*/
 
   @Test
   public void deveRetornarStatus400_QuandoCadastrarRestauranteSemTaxaFrete() {

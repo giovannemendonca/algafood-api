@@ -1,6 +1,15 @@
 {
   "nome": "New York Barbecue",
   "taxaFrete": 12,
+  "endereco": {
+    "cep": "00000-000",
+    "logradouro": "Rua dos Bobos",
+    "numero": "0",
+    "bairro": "Centro",
+    "cidade": {
+      "id": 1
+    }
+  },
   "cozinha": {
     "id": 2
   }
