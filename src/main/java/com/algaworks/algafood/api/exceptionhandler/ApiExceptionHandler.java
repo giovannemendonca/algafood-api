@@ -42,7 +42,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
           EntidadeNaoEncontradaException ex, WebRequest request) {
 
     HttpStatus status = HttpStatus.NOT_FOUND;
-    ProblemType problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
+    ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
     String detail = ex.getMessage();
 
     Problem problem = createProblemBuilder(status, problemType, detail).build();
@@ -110,7 +110,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<?> handleUncaught(Exception ex, WebRequest request) {
 
     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-    ProblemType problemType = ProblemType.ERROR_DE_SISTEMA;
+    ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
     String detail = MSG_ERRO_GENERICA_USUARIO_FINAL;
 
     Problem problem = createProblemBuilder(status, problemType, detail).build();
@@ -136,7 +136,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     HttpStatus status = HttpStatus.BAD_REQUEST;
-    ProblemType problemType = ProblemType.MESSAGEM_INCOMPREENSIVEL;
+    ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
     String detail = "O corpo da requisição está inválido. Verifique erro de sintaxe.";
 
     Problem problem = createProblemBuilder(status, problemType, detail).build();
@@ -203,7 +203,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     HttpStatus status = HttpStatus.BAD_REQUEST;
-    ProblemType problemType = ProblemType.MESSAGEM_INCOMPREENSIVEL;
+    ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
     String detail = String.format("A propriedade '%s' recebeu o valor '%s', "
                     + "que é de um tipo inválido. Corrija e informe um valor compatível com o tipo %s.",
             path,
@@ -238,7 +238,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     HttpStatus status = (HttpStatus) statusCode;
     String path = joinPath(ex.getPath());
-    ProblemType problemType = ProblemType.MESSAGEM_INCOMPREENSIVEL;
+    ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
     String detail = String.format("A propriedade '%s' não existe. "
             + "Corrija ou remova essa propriedade e tente novamente.", path);
 
