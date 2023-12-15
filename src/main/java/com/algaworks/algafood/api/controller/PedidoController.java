@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.assembler.PedidoInputDTODisassembler;
 import com.algaworks.algafood.api.assembler.PedidoResumoDTOAssembler;
 import com.algaworks.algafood.api.model.dto.PedidoDTO;
 import com.algaworks.algafood.api.model.dto.PedidoResumoDTO;
+import com.algaworks.algafood.api.model.dto.ProdutoDTO;
 import com.algaworks.algafood.api.model.dto.input.PedidoInputDTO;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -18,6 +19,10 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -49,11 +54,16 @@ public class PedidoController {
     }
 
     @GetMapping
-    public List<PedidoResumoDTO> pesquisar(PedidoFilter filtro) {
-        List<Pedido> todosPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
+    public Page<PedidoResumoDTO> pesquisar(
+            PedidoFilter filtro,
+            @PageableDefault(size = 10) Pageable pageable) {
 
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+        List<PedidoResumoDTO> pedidoResumoDTO = pedidoResumoDTOAssembler.toCollectionDTO(pedidosPage.getContent());
+        Page<PedidoResumoDTO> pedidoResumoDTOPage = new PageImpl<>(pedidoResumoDTO, pageable, pedidosPage.getTotalElements());
 
-        return pedidoResumoDTOAssembler.toCollectionDTO(todosPedidos);
+        return pedidoResumoDTOPage;
+
     }
 
     @GetMapping("/{codigoPedido}")
