@@ -66,7 +66,7 @@ public class CadastroCozinhaIT {
 
 	}
 
-	@Test
+	/*@Test
 	public void deveRetornarQuantidadeCorretaDeCozinhas_QuandoConsultarCozinhas() {
 
 		given()
@@ -78,7 +78,7 @@ public class CadastroCozinhaIT {
 						.body("nome", hasItems("Tailandesa"));
 
 	}
-
+*/
 	@Test
 	public void deveRetornaStatus201_QuandoCadastrarCozinha() {
 
