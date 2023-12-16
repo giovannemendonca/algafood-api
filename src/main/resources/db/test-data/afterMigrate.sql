@@ -309,7 +309,7 @@ insert into pedido (id, codigo, restaurante_id, usuario_cliente_id, forma_pagame
                     endereco_cep,
                     endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
                     status, data_criacao, data_confirmacao, data_entrega, subtotal, taxa_frete, valor_total)
-values (4, '5c621c9a-ba61-4454-8631-8aabefe58dc2', 1, 2, 1, 1, '38400-800', 'Rua Fortaleza', '900', 'Apto 504',
+values (4, '5c621c9a-ba61-4454-8631-8aabefe58dc2', 2, 2, 1, 1, '38400-800', 'Rua Fortaleza', '900', 'Apto 504',
         'Centro',
         'ENTREGUE', '2019-11-02 20:34:04', '2019-11-02 20:35:10', '2019-11-02 21:10:32', 174.4, 5, 179.4);
 
@@ -324,14 +324,14 @@ insert into pedido (id, codigo, restaurante_id, usuario_cliente_id, forma_pagame
                     endereco_cep,
                     endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
                     status, data_criacao, data_confirmacao, data_entrega, subtotal, taxa_frete, valor_total)
-values (6, 'b7b3c2e0-0a6a-4b1f-9b0e-0a1a7ae8a8a4', 1, 4, 1, 1, '38400-300', 'Rua 20', '123', 'Casa 10', 'Martins',
+values (6, 'b7b3c2e0-0a6a-4b1f-9b0e-0a1a7ae8a8a4', 3, 4, 1, 1, '38400-300', 'Rua 20', '123', 'Casa 10', 'Martins',
         'ENTREGUE', '2019-11-03 20:34:04', '2019-11-03 20:35:10', '2019-11-03 21:10:32', 110, 10, 120);
 
 insert into pedido (id, codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id,
                     endereco_cep,
                     endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
                     status, data_criacao, data_confirmacao, data_entrega, subtotal, taxa_frete, valor_total)
-values (7, 'b7b3c2e0-0a6a-4b1f-9b0e-0a1a7ae8a8a1', 1, 5, 1, 1, '38400-300', 'Rua 20', '123', 'Casa 10', 'Martins',
+values (7, 'b7b3c2e0-0a6a-4b1f-9b0e-0a1a7ae8a8a1', 2, 5, 1, 1, '38400-300', 'Rua 20', '123', 'Casa 10', 'Martins',
         'ENTREGUE', '2019-11-03 20:34:04', '2019-11-03 20:35:10', '2019-11-03 21:10:32', 110, 10, 120);
 
 insert into pedido (id, codigo, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id,
