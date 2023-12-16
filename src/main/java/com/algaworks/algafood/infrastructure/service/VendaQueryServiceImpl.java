@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -21,15 +22,17 @@ public class VendaQueryServiceImpl implements VendaQueryService {
     private EntityManager manager;
 
     @Override
-    public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro) {
+    public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro, String timeOffset) {
 
-        List<Predicate> predicates = new ArrayList<Predicate>();
+
 
 
         var builder = manager.getCriteriaBuilder(); // esse getCriteriaBuilder() é o que cria a query
         var query = builder.createQuery(VendaDiaria.class); // aqui é onde se define o tipo de retorno da query
         var root = query.from(Pedido.class); // aqui é onde se define a entidade que será consultada
 
+        // aqui é onde se define os filtros da query
+        List<Predicate> predicates = new ArrayList<Predicate>();
 
         if (filtro.getRestauranteId() != null) {
             predicates.add(builder.equal(root.get("restaurante").get("id"), filtro.getRestauranteId()));
@@ -42,9 +45,20 @@ public class VendaQueryServiceImpl implements VendaQueryService {
         }
         predicates.add(root.get("status").in(StatusPedido.CONFIRMADO, StatusPedido.ENTREGUE));
 
+        // essa função é para converter o timezone do banco para o timezone do brasil
+        var functionConvertTzDataCriacao = builder.function(
+                "convert_tz",
+                Date.class,
+                root.get("dataCriacao"),
+                builder.literal("+00:00"),
+                builder.literal(timeOffset)
+        );
 
         // essa função é para pegar a date no formato yyyy-mm-dd e não yyyy-mm-dd hh:mm:ss como é salvo no banco
-        var functionDateDataCriacao = builder.function("date", LocalDate.class, root.get("dataCriacao"));
+        var functionDateDataCriacao = builder.function(
+                "date",
+                LocalDate.class,
+                functionConvertTzDataCriacao);
 
         // aqui é o select da query
         // no primeiro parâmetro é o tipo de retorno da query
