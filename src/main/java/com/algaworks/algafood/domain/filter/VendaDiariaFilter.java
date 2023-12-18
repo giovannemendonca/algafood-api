@@ -1,11 +1,12 @@
 package com.algaworks.algafood.domain.filter;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.time.OffsetDateTime;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import java.time.OffsetDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
 @Setter
 @Getter
