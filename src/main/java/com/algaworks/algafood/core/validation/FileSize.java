@@ -1,5 +1,6 @@
 package com.algaworks.algafood.core.validation;
 
+import com.algaworks.algafood.core.validation.FileSizeValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

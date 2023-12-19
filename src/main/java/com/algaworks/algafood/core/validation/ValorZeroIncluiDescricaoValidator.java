@@ -1,5 +1,6 @@
 package com.algaworks.algafood.core.validation;
 
+import com.algaworks.algafood.core.validation.ValorZeroIncluiDescricao;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ValidationException;
