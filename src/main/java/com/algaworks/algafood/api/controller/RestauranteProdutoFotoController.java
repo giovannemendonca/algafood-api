@@ -38,7 +38,7 @@ public class RestauranteProdutoFotoController {
     public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId,
                                         @PathVariable Long produtoId,
                                         @Valid FotoProdutoInputDTO fotoProdutoInput
-    ) {
+    ) throws IOException {
         MultipartFile arquivo = fotoProdutoInput.getArquivo();
         Produto produto = cadastroProdutoService.buscarOuFalhar(restauranteId, produtoId);
 
@@ -49,7 +49,7 @@ public class RestauranteProdutoFotoController {
         foto.setTamanho(arquivo.getSize());
         foto.setNomeArquivo(arquivo.getOriginalFilename());
 
-        FotoProduto fotoSalva = catalogoFotoProdutoService.salvar(foto);
+        FotoProduto fotoSalva = catalogoFotoProdutoService.salvar(foto, arquivo.getInputStream());
 
         return fotoProdutoDTOAssembler.toDTO(fotoSalva);
 
