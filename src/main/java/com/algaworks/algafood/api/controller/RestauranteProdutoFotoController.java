@@ -33,6 +33,12 @@ public class RestauranteProdutoFotoController {
         this.fotoProdutoDTOAssembler = fotoProdutoDTOAssembler;
     }
 
+    @GetMapping
+    public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+        FotoProduto fotoProduto = catalogoFotoProdutoService.buscarOuFalhar(restauranteId, produtoId);
+        return fotoProdutoDTOAssembler.toDTO(fotoProduto);
+    }
+
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId,
