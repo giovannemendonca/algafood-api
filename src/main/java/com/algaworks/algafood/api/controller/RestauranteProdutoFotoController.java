@@ -3,17 +3,22 @@ package com.algaworks.algafood.api.controller;
 import com.algaworks.algafood.api.assembler.FotoProdutoDTOAssembler;
 import com.algaworks.algafood.api.model.dto.FotoProdutoDTO;
 import com.algaworks.algafood.api.model.dto.input.FotoProdutoInputDTO;
+import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
+import com.algaworks.algafood.domain.service.FotoStorageService;
 import jakarta.validation.Valid;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.UUID;
 
@@ -24,16 +29,20 @@ public class RestauranteProdutoFotoController {
     private CatalogoFotoProdutoService catalogoFotoProdutoService;
     private CadastroProdutoService cadastroProdutoService;
     private FotoProdutoDTOAssembler fotoProdutoDTOAssembler;
+    private FotoStorageService fotoStorageService;
 
     RestauranteProdutoFotoController(CatalogoFotoProdutoService catalogoFotoProdutoService,
                                      CadastroProdutoService cadastroProdutoService,
-                                     FotoProdutoDTOAssembler fotoProdutoDTOAssembler) {
+                                     FotoProdutoDTOAssembler fotoProdutoDTOAssembler,
+                                     FotoStorageService fotoStorageService
+    ) {
         this.catalogoFotoProdutoService = catalogoFotoProdutoService;
         this.cadastroProdutoService = cadastroProdutoService;
         this.fotoProdutoDTOAssembler = fotoProdutoDTOAssembler;
+        this.fotoStorageService = fotoStorageService;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         FotoProduto fotoProduto = catalogoFotoProdutoService.buscarOuFalhar(restauranteId, produtoId);
         return fotoProdutoDTOAssembler.toDTO(fotoProduto);
@@ -58,6 +67,22 @@ public class RestauranteProdutoFotoController {
         FotoProduto fotoSalva = catalogoFotoProdutoService.salvar(foto, arquivo.getInputStream());
 
         return fotoProdutoDTOAssembler.toDTO(fotoSalva);
+    }
+
+    @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> servirFoto(@PathVariable Long restauranteId,
+                                                          @PathVariable Long produtoId) {
+        try {
+
+            FotoProduto fotoProduto = catalogoFotoProdutoService.buscarOuFalhar(restauranteId, produtoId);
+            InputStream inputStream = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(new InputStreamResource(inputStream));
+        }catch (EntidadeNaoEncontradaException e){
+            return ResponseEntity.notFound().build();
+        }
 
     }
 }

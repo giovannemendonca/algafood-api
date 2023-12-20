@@ -15,7 +15,7 @@ public class FotoProduto {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @MapsId // esse @MapsId é para mapear o id da entidade Produto como id da entidade FotoProduto
     private Produto produto;
 
     private String nomeArquivo;
