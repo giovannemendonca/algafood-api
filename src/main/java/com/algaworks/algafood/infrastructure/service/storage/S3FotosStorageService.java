@@ -4,19 +4,18 @@ import com.algaworks.algafood.core.storage.StorageProperties;
 import com.algaworks.algafood.domain.service.FotoStorageService;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.net.URL;
 
 public class S3FotosStorageService implements FotoStorageService {
 
-    @Autowired
     private AmazonS3 amazonS3;
-
-    @Autowired
     private StorageProperties storageProperties;
 
+    public S3FotosStorageService(AmazonS3 amazonS3, StorageProperties storageProperties) {
+        this.amazonS3 = amazonS3;
+        this.storageProperties = storageProperties;
+    }
 
     @Override
     public void armazenar(NovaFoto novaFoto) {
