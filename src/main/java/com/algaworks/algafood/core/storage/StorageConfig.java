@@ -8,6 +8,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,11 +17,12 @@ public class StorageConfig {
 
     private final StorageProperties storageProperties;
 
-    StorageConfig(StorageProperties storageProperties){
+    StorageConfig(StorageProperties storageProperties) {
         this.storageProperties = storageProperties;
     }
 
     @Bean
+    @ConditionalOnProperty(name = "algafood.storage.tipo", havingValue = "s3")
     public AmazonS3 amazonS3() {
 
         var idChaveAcesso = storageProperties.getS3().getIdChaveAcesso();
