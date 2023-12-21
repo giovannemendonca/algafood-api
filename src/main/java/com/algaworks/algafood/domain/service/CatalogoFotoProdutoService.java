@@ -42,6 +42,7 @@ public class CatalogoFotoProdutoService {
 
         NovaFoto novaFoto = NovaFoto.builder()
                 .nomeArquivo(foto.getNomeArquivo())
+                .contentType(foto.getContentType())
                 .inputStream(dadosArquivos)
                 .build();
 
@@ -59,7 +60,7 @@ public class CatalogoFotoProdutoService {
         fotoStorage.remover(fotoProduto.getNomeArquivo());
     }
 
-    public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId){
+    public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {
         return produtoRepository.findFotoById(restauranteId, produtoId).orElseThrow(
                 () -> new ProdutoNaoEncontradoException(restauranteId, produtoId)
         );
