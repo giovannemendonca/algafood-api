@@ -25,6 +25,7 @@ spring:
 
 algafood:
   storage:
+    tipo:
     local:
       diretorio-fotos:
     s3:
