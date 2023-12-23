@@ -1,27 +1,35 @@
 package com.algaworks.algafood.domain.service;
 
-import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Pedido;
-import com.algaworks.algafood.domain.model.StatusPedido;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import com.algaworks.algafood.domain.service.EnvioEmailService.Mensagem;
+
 
 @Service
 public class FluxoPedidoService {
 
-    private EmissaoPedidoService emissaoPedidoService;
+    private final EmissaoPedidoService emissaoPedidoService;
+    final EnvioEmailService envioEmail;
 
-    FluxoPedidoService(EmissaoPedidoService emissaoPedidoService) {
+    FluxoPedidoService(EmissaoPedidoService emissaoPedidoService, EnvioEmailService envioEmailService) {
         this.emissaoPedidoService = emissaoPedidoService;
+        this.envioEmail = envioEmailService;
     }
 
     @Transactional
     public void confirmar(String codigoPedido) {
         Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
         pedido.confirmar();
+
+        var mensagem = Mensagem.builder()
+                .destinatario(pedido.getCliente().getEmail())
+                .assunto(pedido.getRestaurante().getNome() + " - Pedido comfirmado")
+                .corpo("O pedido de código <strong>" + pedido.getCodigo() + "</strong> foi confirmado!")
+                .build();
+
+        envioEmail.enviar(mensagem);
     }
 
     @Transactional

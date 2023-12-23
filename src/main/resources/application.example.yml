@@ -13,6 +13,7 @@ spring:
 
   flyway:
     locations: classpath:db/migration,classpath:db/test-data
+
   jackson:
     deserialization:
       fail-on-unknown-properties: true
@@ -23,6 +24,14 @@ spring:
     resources:
       add-mappings: false
 
+  # Configuração do servidor de e-mail SendGrid
+  mail:
+    host:
+    port:
+    username:
+    password:
+
+# Variáveis de ambiente para configuração do armazenamento de fotos
 algafood:
   storage:
     tipo:
@@ -35,3 +44,5 @@ algafood:
       regiao:
       diretorio-fotos:
 
+  email:
+    remetente: Algafood <naoresponder@algafood.com.br>
