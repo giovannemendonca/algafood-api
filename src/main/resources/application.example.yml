@@ -24,7 +24,12 @@ spring:
     resources:
       add-mappings: false
 
-  # Configuração do servidor de e-mail SendGrid
+  freemarker:
+    settings:
+      locale: pt_BR
+
+
+  # Configuração do servidor de e-mail
   mail:
     host:
     port:
