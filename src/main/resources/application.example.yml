@@ -36,7 +36,7 @@ spring:
     username:
     password:
 
-# Variáveis de ambiente para configuração do armazenamento de fotos
+# Variáveis de ambiente para configuração
 algafood:
   storage:
     tipo:
@@ -50,4 +50,5 @@ algafood:
       diretorio-fotos:
 
   email:
-    remetente: Algafood <naoresponder@algafood.com.br>
+    remetente: giovannemendonca@gmail.com
+  impl: mock

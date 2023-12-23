@@ -16,5 +16,10 @@ public class EmailProperties {
 
     @NotNull
     private String remetente;
+    private Implementacao implementacao = Implementacao.MOCK;
+
+    public enum Implementacao{
+        SMTP, MOCK
+    }
 
 }
