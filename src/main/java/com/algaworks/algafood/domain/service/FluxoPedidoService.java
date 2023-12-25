@@ -21,7 +21,7 @@ public class FluxoPedidoService {
     public void confirmar(String codigoPedido) {
         Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
         pedido.confirmar();
-    pedidoRepository.save(pedido);
+        pedidoRepository.save(pedido);
     }
 
     @Transactional
@@ -34,6 +34,8 @@ public class FluxoPedidoService {
     public void cancelar(String codigoPedido) {
         Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
         pedido.cancelar();
+        pedidoRepository.save(pedido);
+
     }
 
 
