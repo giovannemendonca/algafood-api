@@ -1,36 +1,27 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.domain.model.Pedido;
+import com.algaworks.algafood.domain.repository.PedidoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
-import com.algaworks.algafood.domain.service.EnvioEmailService.Mensagem;
 
 
 @Service
 public class FluxoPedidoService {
 
     private final EmissaoPedidoService emissaoPedidoService;
-    final EnvioEmailService envioEmail;
+    private final PedidoRepository pedidoRepository;
 
-    FluxoPedidoService(EmissaoPedidoService emissaoPedidoService, EnvioEmailService envioEmailService) {
+    FluxoPedidoService(EmissaoPedidoService emissaoPedidoService, PedidoRepository pedidoRepository) {
         this.emissaoPedidoService = emissaoPedidoService;
-        this.envioEmail = envioEmailService;
+        this.pedidoRepository = pedidoRepository;
     }
 
     @Transactional
     public void confirmar(String codigoPedido) {
         Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
         pedido.confirmar();
-
-        var mensagem = Mensagem.builder()
-                .destinatario(pedido.getCliente().getEmail())
-                .assunto(pedido.getRestaurante().getNome() + " - Pedido comfirmado")
-                .corpo("pedido-confirmado.html")
-                .variavel("pedido", pedido)
-                .build();
-
-        envioEmail.enviar(mensagem);
+    pedidoRepository.save(pedido);
     }
 
     @Transactional

@@ -1,10 +1,12 @@
 package com.algaworks.algafood.domain.model;
 
+import com.algaworks.algafood.domain.event.PedidoConfirmadoEvent;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -13,9 +15,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 
     @Id
     @EqualsAndHashCode.Include
@@ -78,6 +80,11 @@ public class Pedido {
     public void confirmar() {
         setStatus(StatusPedido.CONFIRMADO);
         setDataConfirmacao(OffsetDateTime.now());
+
+        // registra o evento de confirmação de pedido
+        // e passa o próprio pedido como parâmetro
+        registerEvent(new PedidoConfirmadoEvent(this));
+
     }
 
     public void entregar() {
