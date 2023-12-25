@@ -2,6 +2,7 @@ package com.algaworks.algafood.core.email;
 
 import com.algaworks.algafood.domain.service.EnvioEmailService;
 import com.algaworks.algafood.infrastructure.service.email.MockEnvioEmailService;
+import com.algaworks.algafood.infrastructure.service.email.SandBoxEnvioEmailService;
 import com.algaworks.algafood.infrastructure.service.email.SmtpEnvioEmailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,14 +28,11 @@ public class EmailConfig {
     @Bean
     public EnvioEmailService envioEmailService() {
 
-        switch (emailProperties.getImplementacao()) {
-            case MOCK:
-                return new MockEnvioEmailService();
-            case SMTP:
-                return new SmtpEnvioEmailService(mailSender, emailProperties, freemarkerConfig);
-            default:
-                return null;
-        }
+        return switch (emailProperties.getImplementacao()) {
+            case MOCK -> new MockEnvioEmailService();
+            case SMTP -> new SmtpEnvioEmailService(mailSender, emailProperties, freemarkerConfig);
+            case SANDBOX -> new SandBoxEnvioEmailService(mailSender, emailProperties, freemarkerConfig);
+        };
     }
 
 
