@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class FotoProduto {
 
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     @Id
     @Column(name = "produto_id")
     private Long id;

@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api;
+package com.algaworks.algafood.api.utils;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;
