@@ -1,29 +1,44 @@
 package com.algaworks.algafood.api.assembler;
 
+import com.algaworks.algafood.api.controller.UsuarioController;
+import com.algaworks.algafood.api.controller.UsuarioGrupoController;
 import com.algaworks.algafood.api.model.dto.UsuarioDTO;
 import com.algaworks.algafood.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @Component
-public class UsuarioDTOAssembler {
+public class UsuarioDTOAssembler extends RepresentationModelAssemblerSupport<Usuario, UsuarioDTO> {
 
-  @Autowired
-  private ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
-public UsuarioDTO toDTO(Usuario usuario) {
-    return modelMapper.map(usuario, UsuarioDTO.class);
-  }
+    public UsuarioDTOAssembler(ModelMapper modelMapper) {
+        super(UsuarioController.class, UsuarioDTO.class);
+        this.modelMapper = modelMapper;
+    }
 
-  public List<UsuarioDTO> toCollectionModel(Collection<Usuario> usuarios) {
-    return usuarios.stream()
-            .map(usuario -> toDTO(usuario))
-            .collect(Collectors.toList());
-  }
+    @Override
+    public UsuarioDTO toModel(Usuario usuario) {
 
+        UsuarioDTO usuarioDTO = createModelWithId(usuario.getId(), usuario);
+        modelMapper.map(usuario, usuarioDTO);
+
+        usuarioDTO.add(linkTo(methodOn(UsuarioController.class)
+                .listar()).withRel("usuarios"));
+
+        usuarioDTO.add(linkTo(methodOn(UsuarioGrupoController.class)
+                .listar(usuarioDTO.getId())).withRel("grupos-usuario"));
+
+        return usuarioDTO;
+
+    }
+
+    @Override
+    public CollectionModel<UsuarioDTO> toCollectionModel(Iterable<? extends Usuario> entities) {
+        return super.toCollectionModel(entities).add(linkTo(UsuarioController.class).withSelfRel());
+    }
 }

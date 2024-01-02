@@ -11,6 +11,7 @@ import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +33,9 @@ public class UsuarioController {
   @Autowired
   private CadastroUsuarioService cadastroUsuarioService;
 
+
   @GetMapping
-  public List<UsuarioDTO> listar() {
+  public CollectionModel<UsuarioDTO> listar() {
     List<Usuario> usuarios = usuarioRepository.findAll();
     return usuarioDTOAssembler.toCollectionModel(usuarios);
   }
@@ -41,7 +43,7 @@ public class UsuarioController {
   @GetMapping("{usuarioId}")
   public UsuarioDTO buscar(@PathVariable Long usuarioId) {
     Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
-    return usuarioDTOAssembler.toDTO(usuario);
+    return usuarioDTOAssembler.toModel(usuario);
   }
 
   @PostMapping
@@ -49,7 +51,7 @@ public class UsuarioController {
   public UsuarioDTO cadastrar(@Valid @RequestBody UsuarioComSenhaInputDTO usuarioComSenhaInputDTO) {
     Usuario usuario = usuarioInputDTODisassembler.toDomainObject(usuarioComSenhaInputDTO);
     var usuarioCadastrado = cadastroUsuarioService.salvar(usuario);
-    return usuarioDTOAssembler.toDTO(usuarioCadastrado);
+    return usuarioDTOAssembler.toModel(usuarioCadastrado);
   }
 
   @PutMapping("{usuarioId}")
@@ -59,7 +61,7 @@ public class UsuarioController {
     usuarioInputDTODisassembler.copyToDomainObject(usuarioInputDTO, usuarioAtual);
     var usuarioSalvo = cadastroUsuarioService.salvar(usuarioAtual);
 
-    return usuarioDTOAssembler.toDTO(usuarioSalvo);
+    return usuarioDTOAssembler.toModel(usuarioSalvo);
   }
 
   @PutMapping("{usuarioId}/senha")
