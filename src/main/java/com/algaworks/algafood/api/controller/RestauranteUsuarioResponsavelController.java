@@ -10,6 +10,8 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 import java.util.Set;
 
 @RestController
@@ -31,7 +33,9 @@ public class RestauranteUsuarioResponsavelController {
     public CollectionModel<UsuarioDTO> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
         Set<Usuario> usuarios = restaurante.getResponsaveis();
-        return usuarioDTOAssembler.toCollectionModel(usuarios);
+        return usuarioDTOAssembler.toCollectionModel(usuarios)
+                .removeLinks()
+                .add(linkTo(RestauranteUsuarioResponsavelController.class, restauranteId).withSelfRel());
     }
 
     @DeleteMapping("/{usuarioId}")
