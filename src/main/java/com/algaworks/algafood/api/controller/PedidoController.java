@@ -20,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,41 +38,42 @@ public class PedidoController {
     private PedidoRepository pedidoRepository;
     private PedidoDTOAssembler pedidoDTOAssembler;
     private PedidoResumoDTOAssembler pedidoResumoDTOAssembler;
-
     private PedidoInputDTODisassembler pedidoInputDTODisassembler;
+    private PagedResourcesAssembler<Pedido> pedidoPagedResourcesAssembler;
 
     PedidoController(EmissaoPedidoService emissaoPedidoService,
                      PedidoRepository pedidoRepository,
                      PedidoDTOAssembler pedidoDTOAssembler,
                      PedidoResumoDTOAssembler pedidoResumoDTOAssembler,
-                     PedidoInputDTODisassembler pedidoInputDTODisassembler
+                     PedidoInputDTODisassembler pedidoInputDTODisassembler,
+                     PagedResourcesAssembler<Pedido> pedidoPagedResourcesAssembler
     ) {
         this.emissaoPedidoService = emissaoPedidoService;
         this.pedidoRepository = pedidoRepository;
         this.pedidoDTOAssembler = pedidoDTOAssembler;
         this.pedidoResumoDTOAssembler = pedidoResumoDTOAssembler;
         this.pedidoInputDTODisassembler = pedidoInputDTODisassembler;
+        this.pedidoPagedResourcesAssembler = pedidoPagedResourcesAssembler;
     }
 
     @GetMapping
-    public Page<PedidoResumoDTO> pesquisar(
+    public PagedModel<PedidoResumoDTO> pesquisar(
             PedidoFilter filtro,
             @PageableDefault(size = 10) Pageable pageable) {
 
         pageable = traduzirPageable(pageable);
 
         Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
-        List<PedidoResumoDTO> pedidoResumoDTO = pedidoResumoDTOAssembler.toCollectionDTO(pedidosPage.getContent());
-        Page<PedidoResumoDTO> pedidoResumoDTOPage;
-        pedidoResumoDTOPage = new PageImpl<>(pedidoResumoDTO, pageable, pedidosPage.getTotalElements());
 
-        return pedidoResumoDTOPage;
+        PagedModel<PedidoResumoDTO> pedidoResumoDTOS = pedidoPagedResourcesAssembler.toModel(pedidosPage, pedidoResumoDTOAssembler);
 
+        return pedidoResumoDTOS;
     }
+
 
     @GetMapping("/{codigoPedido}")
     public PedidoDTO buscar(@PathVariable String codigoPedido) {
-        return pedidoDTOAssembler.toDTO(emissaoPedidoService.buscarOuFalhar(codigoPedido));
+        return pedidoDTOAssembler.toModel(emissaoPedidoService.buscarOuFalhar(codigoPedido));
     }
 
 
@@ -83,7 +86,7 @@ public class PedidoController {
             pedido.setCliente(new Usuario());
             pedido.getCliente().setId(1L);
 
-            return pedidoDTOAssembler.toDTO(emissaoPedidoService.emitir(pedido));
+            return pedidoDTOAssembler.toModel(emissaoPedidoService.emitir(pedido));
         } catch (EntidadeEmUsoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
