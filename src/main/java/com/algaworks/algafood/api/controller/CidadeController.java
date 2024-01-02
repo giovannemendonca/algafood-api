@@ -13,11 +13,12 @@ import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 import java.util.List;
@@ -39,25 +40,16 @@ public class CidadeController {
     private CidadeInputDTODisassembler cidadeInputDTODisassembler;
 
     @GetMapping
-    public List<CidadeDTO> listar() {
+    public CollectionModel<CidadeDTO> listar() {
+
         List<Cidade> cidades = cidadeRepository.findAll();
-        List<CidadeDTO> cidadesDTO = cidadeDTOAssembler.toCollectionDTO(cidades);
-        return cidadesDTO;
+        return cidadeDTOAssembler.toCollectionModel(cidades);
     }
 
     @GetMapping("/{cidadeId}")
     public CidadeDTO buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
-        CidadeDTO cidadeDTO = cidadeDTOAssembler.toDTO(cidade);
-
-        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
-                .slash(cidadeDTO.getId()).withSelfRel());
-        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
-                .withRel("cidades"));
-        cidadeDTO.getEstado().add(WebMvcLinkBuilder.linkTo(EstadoController.class)
-                .slash(cidadeDTO.getEstado().getId()).withSelfRel());
-
-        return cidadeDTO;
+        return cidadeDTOAssembler.toModel(cidade);
     }
 
     @PostMapping
@@ -65,7 +57,7 @@ public class CidadeController {
         try {
             Cidade cidade = cidadeInputDTODisassembler.toDomainObject(cidadeInputDTO);
             cidade = cadastroCidade.salvar(cidade);
-            CidadeDTO cidadeDTO = cidadeDTOAssembler.toDTO(cidade);
+            CidadeDTO cidadeDTO = cidadeDTOAssembler.toModel(cidade);
             ResourceUriHelper.addUriInResponseHeader(cidadeDTO.getId());
 
             return cidadeDTO;
@@ -81,7 +73,7 @@ public class CidadeController {
             cidadeInputDTODisassembler.copyToDomainObject(cidadeInputDTO, cidadeAtual);
 
             cidadeAtual = cadastroCidade.salvar(cidadeAtual);
-            CidadeDTO cidadeDTO = cidadeDTOAssembler.toDTO(cidadeAtual);
+            CidadeDTO cidadeDTO = cidadeDTOAssembler.toModel(cidadeAtual);
 
             return cidadeDTO;
         } catch (EstadoNaoEncontradoException e) {
