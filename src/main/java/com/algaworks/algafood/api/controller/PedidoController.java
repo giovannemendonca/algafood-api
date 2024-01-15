@@ -6,6 +6,7 @@ import com.algaworks.algafood.api.assembler.PedidoResumoDTOAssembler;
 import com.algaworks.algafood.api.model.dto.PedidoDTO;
 import com.algaworks.algafood.api.model.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.model.dto.input.PedidoInputDTO;
+import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -61,9 +62,11 @@ public class PedidoController {
             PedidoFilter filtro,
             @PageableDefault(size = 10) Pageable pageable) {
 
-        pageable = traduzirPageable(pageable);
+        Pageable pageableTraduzido = pageable = traduzirPageable(pageable);
 
-        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
+
+        pedidosPage = new PageWrapper<>(pedidosPage, pageable);
 
         PagedModel<PedidoResumoDTO> pedidoResumoDTOS = pedidoPagedResourcesAssembler.toModel(pedidosPage, pedidoResumoDTOAssembler);
 
