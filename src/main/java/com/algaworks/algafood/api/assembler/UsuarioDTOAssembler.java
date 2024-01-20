@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.assembler;
 
 import com.algaworks.algafood.api.controller.UsuarioController;
 import com.algaworks.algafood.api.controller.UsuarioGrupoController;
+import com.algaworks.algafood.api.links.AlgaLinks;
 import com.algaworks.algafood.api.model.dto.UsuarioDTO;
 import com.algaworks.algafood.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
@@ -15,10 +16,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 public class UsuarioDTOAssembler extends RepresentationModelAssemblerSupport<Usuario, UsuarioDTO> {
 
     private ModelMapper modelMapper;
+    private AlgaLinks algaLinks;
 
-    public UsuarioDTOAssembler(ModelMapper modelMapper) {
+    public UsuarioDTOAssembler(ModelMapper modelMapper, AlgaLinks algaLinks) {
         super(UsuarioController.class, UsuarioDTO.class);
         this.modelMapper = modelMapper;
+        this.algaLinks = algaLinks;
     }
 
     @Override
@@ -27,11 +30,8 @@ public class UsuarioDTOAssembler extends RepresentationModelAssemblerSupport<Usu
         UsuarioDTO usuarioDTO = createModelWithId(usuario.getId(), usuario);
         modelMapper.map(usuario, usuarioDTO);
 
-        usuarioDTO.add(linkTo(methodOn(UsuarioController.class)
-                .listar()).withRel("usuarios"));
-
-        usuarioDTO.add(linkTo(methodOn(UsuarioGrupoController.class)
-                .listar(usuarioDTO.getId())).withRel("grupos-usuario"));
+        usuarioDTO.add(algaLinks.linkToUsuarios("usuarios"));
+        usuarioDTO.add(algaLinks.linkToGruposUsuario(usuario.getId(), "grupos-usuario"));
 
         return usuarioDTO;
 

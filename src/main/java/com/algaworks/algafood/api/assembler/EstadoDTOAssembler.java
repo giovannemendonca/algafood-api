@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.assembler;
 
 import com.algaworks.algafood.api.controller.EstadoController;
+import com.algaworks.algafood.api.links.AlgaLinks;
 import com.algaworks.algafood.api.model.dto.EstadoDTO;
 import com.algaworks.algafood.domain.model.Estado;
 import org.modelmapper.ModelMapper;
@@ -14,17 +15,21 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 public class EstadoDTOAssembler extends RepresentationModelAssemblerSupport<Estado, EstadoDTO> {
 
     private final ModelMapper modelMapper;
+    private final AlgaLinks algaLinks;
 
-    EstadoDTOAssembler(ModelMapper modelMapper) {
+    EstadoDTOAssembler(ModelMapper modelMapper, AlgaLinks algaLinks) {
         super(EstadoController.class, EstadoDTO.class);
         this.modelMapper = modelMapper;
+        this.algaLinks = algaLinks;
     }
 
     @Override
     public EstadoDTO toModel(Estado estado) {
         EstadoDTO estadoDTO = createModelWithId(estado.getId(), estado);
         modelMapper.map(estado, estadoDTO);
-        estadoDTO.add(linkTo(methodOn(EstadoController.class).listar()).withRel("estados"));
+
+        estadoDTO.add(algaLinks.linkToEstados("estados"));
+
         return estadoDTO;
     }
 

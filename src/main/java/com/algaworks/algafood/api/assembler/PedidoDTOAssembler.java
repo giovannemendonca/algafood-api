@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.assembler;
 
 import com.algaworks.algafood.api.controller.*;
+import com.algaworks.algafood.api.links.AlgaLinks;
 import com.algaworks.algafood.api.model.dto.PedidoDTO;
 import com.algaworks.algafood.domain.model.Pedido;
 import org.modelmapper.ModelMapper;
@@ -18,50 +19,40 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class PedidoDTOAssembler extends RepresentationModelAssemblerSupport<Pedido, PedidoDTO> {
 
     private ModelMapper modelMapper;
+    private AlgaLinks algaLinks;
 
-    public PedidoDTOAssembler(ModelMapper modelMapper) {
+    public PedidoDTOAssembler(ModelMapper modelMapper, AlgaLinks algaLinks) {
         super(PedidoController.class, PedidoDTO.class);
         this.modelMapper = modelMapper;
+        this.algaLinks = algaLinks;
     }
 
     @Override
     public PedidoDTO toModel(Pedido pedido) {
 
         PedidoDTO pedidoDTO = createModelWithId(pedido.getCodigo(), pedido);
+
         modelMapper.map(pedido, pedidoDTO);
 
-
-        TemplateVariables pageVariables = new TemplateVariables(
-                new TemplateVariable("page", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("size", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("sort", TemplateVariable.VariableType.REQUEST_PARAM));
+        pedidoDTO.add(algaLinks.linkToPedido());
 
 
-        TemplateVariables filtroVariables  =   new TemplateVariables(
-                new TemplateVariable("clienteId", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("restauranteId", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("dataCriacaoInicio", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("dataCriacaoFim", TemplateVariable.VariableType.REQUEST_PARAM));
+        pedidoDTO.getRestaurante().add(
+                algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
 
+        pedidoDTO.getCliente().add(
+                algaLinks.linkToUsuario(pedido.getCliente().getId()));
 
-        String pedidosUrl = linkTo(PedidoController.class).toUri().toString();
+        pedidoDTO.getFormaPagamento().add(
+                algaLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
 
-        pedidoDTO.add(Link.of(UriTemplate.of(pedidosUrl, pageVariables.concat(filtroVariables)), "pedidos"));
+        pedidoDTO.getEnderecoEntrega().getCidade().add(
+                algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
 
-        pedidoDTO.getRestaurante().add(linkTo(methodOn(RestauranteController.class)
-                .buscar(pedidoDTO.getRestaurante().getId())).withSelfRel());
-
-        pedidoDTO.getCliente().add(linkTo(methodOn(UsuarioController.class)
-                .buscar(pedidoDTO.getCliente().getId())).withSelfRel());
-
-        pedidoDTO.getFormaPagamento().add(linkTo(methodOn(FormaPagamentoController.class)
-                .buscar(pedidoDTO.getFormaPagamento().getId(), null)).withSelfRel());
-
-        pedidoDTO.getEnderecoEntrega().getCidade().add(linkTo(methodOn(CidadeController.class)
-                .buscar(pedidoDTO.getEnderecoEntrega().getCidade().getId())).withSelfRel());
-
-        pedidoDTO.getItens().forEach(itemPedidoDTO -> itemPedidoDTO.add(linkTo(methodOn(RestauranteProdutoController.class)
-                .buscar(pedidoDTO.getRestaurante().getId(), itemPedidoDTO.getProdutoId())).withRel("produto")));
+        pedidoDTO.getItens().forEach(item -> {
+            item.add(algaLinks.linkToProduto(
+                    pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
+        });
 
         return pedidoDTO;
     }

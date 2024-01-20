@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 
 import com.algaworks.algafood.api.assembler.UsuarioDTOAssembler;
+import com.algaworks.algafood.api.links.AlgaLinks;
 import com.algaworks.algafood.api.model.dto.UsuarioDTO;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.model.Usuario;
@@ -20,13 +21,16 @@ public class RestauranteUsuarioResponsavelController {
 
     private CadastroRestauranteService cadastroRestauranteService;
     private UsuarioDTOAssembler usuarioDTOAssembler;
+    private AlgaLinks algaLinks;
 
     RestauranteUsuarioResponsavelController(
             CadastroRestauranteService cadastroRestaurante,
-            UsuarioDTOAssembler usuarioDTOAssembler
+            UsuarioDTOAssembler usuarioDTOAssembler,
+            AlgaLinks algaLinks
     ) {
         this.cadastroRestauranteService = cadastroRestaurante;
         this.usuarioDTOAssembler = usuarioDTOAssembler;
+        this.algaLinks = algaLinks;
     }
 
     @GetMapping
@@ -35,7 +39,7 @@ public class RestauranteUsuarioResponsavelController {
         Set<Usuario> usuarios = restaurante.getResponsaveis();
         return usuarioDTOAssembler.toCollectionModel(usuarios)
                 .removeLinks()
-                .add(linkTo(RestauranteUsuarioResponsavelController.class, restauranteId).withSelfRel());
+                .add(algaLinks.linkToResponsaveisRestaurante(restauranteId));
     }
 
     @DeleteMapping("/{usuarioId}")

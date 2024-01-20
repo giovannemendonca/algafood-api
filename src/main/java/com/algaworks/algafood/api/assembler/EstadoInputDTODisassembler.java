@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.assembler;
 
+import com.algaworks.algafood.api.links.AlgaLinks;
 import com.algaworks.algafood.api.model.dto.EstadoDTO;
 import com.algaworks.algafood.api.model.dto.input.EstadoIdInputDTO;
 import com.algaworks.algafood.api.model.dto.input.EstadoInputDTO;
@@ -13,6 +14,7 @@ public class EstadoInputDTODisassembler {
 
   @Autowired
   private ModelMapper modelMapper;
+
 
   public Estado toDomainObject(EstadoInputDTO estadoInputDTO) {
     return modelMapper.map(estadoInputDTO, Estado.class);
