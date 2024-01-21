@@ -18,6 +18,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private ApiDeprecationHandler apiDeprecationHandler;
 
+    @Autowired
+    private ApiRetirementHanlder apiRetirementHanlder;
+
+    // esse metodo addCorsMappings é necessário para que o Spring possa interceptar as requisições e adicionar o cabeçalho CORS
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 
@@ -26,10 +30,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE"); // todos os métodos
     }
 
+    // esse metodo addInterceptors faz com que o Spring possa interceptar as requisições e adicionar o cabeçalho deprecado
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(apiDeprecationHandler);
+     // registry.addInterceptor(apiRetirementHanlder);
     }
+
+
 
     // esse bean é necessário para que o Spring possa interceptar as requisições e adicionar o cabeçalho ETag
     @Bean
