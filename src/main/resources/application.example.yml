@@ -1,4 +1,8 @@
 spring:
+
+  profiles:
+    active:
+
   datasource:
     url:
     username:
@@ -50,5 +54,10 @@ algafood:
       diretorio-fotos:
 
   email:
-    remetente: giovannemendonca@gmail.com
+    remetente:
   impl: mock
+
+  logging:
+    loggly:
+      token:
+
