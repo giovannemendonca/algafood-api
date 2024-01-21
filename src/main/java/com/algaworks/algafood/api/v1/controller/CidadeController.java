@@ -37,6 +37,7 @@ public class CidadeController {
     @Autowired
     private CidadeInputDTODisassembler cidadeInputDTODisassembler;
 
+    @Deprecated
     @GetMapping
     public CollectionModel<CidadeDTO> listar() {
 
